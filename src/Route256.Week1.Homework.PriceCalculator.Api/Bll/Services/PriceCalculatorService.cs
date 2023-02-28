@@ -18,7 +18,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         _storageRepository = storageRepository;
     }
 
-    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods, int Distance)
+    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods, int distance)
     {
         if (!goods.Any())
         {
@@ -28,13 +28,14 @@ public class PriceCalculatorService : IPriceCalculatorService
         var volumePrice = CalculatePriceByVolume(goods, out var volume);
         var weightPrice = CalculatePriceByWeight(goods, out var weight);
 
-        var resultPrice = Math.Max(volumePrice, weightPrice) * Distance;
+        var resultPrice = Math.Max(volumePrice, weightPrice) * distance;
 
         _storageRepository.Save(new StorageEntity(
             DateTime.UtcNow,
             volume,
             weight,
-            resultPrice));
+            resultPrice,
+            distance));
 
         return resultPrice;
     }
@@ -77,7 +78,8 @@ public class PriceCalculatorService : IPriceCalculatorService
             .Select(x => new CalculationLogModel(
                 x.Volume,
                 x.Weight,
-                x.Price))
+                x.Price,
+                x.Distance))
             .ToArray();
     }
 }

@@ -40,4 +40,22 @@ public class V3DeliveryPriseController : ControllerBase
         return new CalculateResponse(price);
     }
 
+    /// <summary>
+    /// Метод получения истории вычисления
+    /// </summary>
+    /// <returns></returns>
+    [HttpPost("get-history")]
+    public GetHistoryResponse[] History(GetHistoryRequest request)
+    {
+        var log = _priceCalculatorService.QueryLog(request.Take);
+
+        return log
+            .Select(x => new GetHistoryResponse(
+                new CargoResponse(
+                    x.Volume,
+                    x.Weight),
+                x.Price,
+                x.Distance))
+            .ToArray();
+    }
 }
