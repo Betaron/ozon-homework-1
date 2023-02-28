@@ -9,16 +9,16 @@ public class PriceCalculatorService : IPriceCalculatorService
 {
     private const decimal volumeToPriceRatio = 3.27m;
     private const decimal weightToPriceRatio = 1.34m;
-    
+
     private readonly IStorageRepository _storageRepository;
-    
+
     public PriceCalculatorService(
         IStorageRepository storageRepository)
     {
         _storageRepository = storageRepository;
     }
-    
-    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods)
+
+    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods, int Distance)
     {
         if (!goods.Any())
         {
@@ -28,14 +28,14 @@ public class PriceCalculatorService : IPriceCalculatorService
         var volumePrice = CalculatePriceByVolume(goods, out var volume);
         var weightPrice = CalculatePriceByWeight(goods, out var weight);
 
-        var resultPrice = Math.Max(volumePrice, weightPrice);
-        
+        var resultPrice = Math.Max(volumePrice, weightPrice) * Distance;
+
         _storageRepository.Save(new StorageEntity(
             DateTime.UtcNow,
             volume,
             weight,
             resultPrice));
-        
+
         return resultPrice;
     }
 
@@ -49,7 +49,7 @@ public class PriceCalculatorService : IPriceCalculatorService
 
         return volume * volumeToPriceRatio;
     }
-    
+
     private decimal CalculatePriceByWeight(
         IReadOnlyList<GoodModel> goods,
         out decimal weight)
@@ -67,7 +67,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         {
             return Array.Empty<CalculationLogModel>();
         }
-        
+
         var log = _storageRepository.Query()
             .OrderByDescending(x => x.At)
             .Take(take)
@@ -75,7 +75,7 @@ public class PriceCalculatorService : IPriceCalculatorService
 
         return log
             .Select(x => new CalculationLogModel(
-                x.Volume, 
+                x.Volume,
                 x.Weight,
                 x.Price))
             .ToArray();
