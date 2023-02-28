@@ -44,7 +44,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         out decimal volume)
     {
         volume = goods
-            .Select(x => x.Height * x.Width * x.Height / 1000)
+            .Select(x => x.Height * x.Width * x.Height / 1000M)
             .Sum();
 
         return volume * volumeToPriceRatio;
@@ -55,7 +55,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         out decimal weight)
     {
         weight = goods
-            .Select(x => x.Weight / 1000)
+            .Select(x => x.Weight / 1000M)
             .Sum();
 
         return weight * weightToPriceRatio;
