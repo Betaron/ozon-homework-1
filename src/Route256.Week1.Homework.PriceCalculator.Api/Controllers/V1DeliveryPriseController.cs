@@ -21,6 +21,9 @@ public class V1DeliveryPriseController : ControllerBase
     /// <summary>
     /// Метод расчета стоимости доставки на основе объема товаров
     /// </summary>
+    /// <param name="Height">В миллиметрах</param>
+    /// <param name="Length">В миллиметрах</param>
+    /// <param name="Width">В миллиметрах</param>
     /// <returns></returns>
     [HttpPost("calculate")]
     public CalculateResponse Calculate(
@@ -34,7 +37,7 @@ public class V1DeliveryPriseController : ControllerBase
                     x.Width,
                     0 /* для v1 рассчет по весу не предусмотрен */))
                 .ToArray()
-                , 1 /* для версий ниже v3 расчет на 1 км*/);
+                , 1000 /* для версий ниже v3 расчет на 1 км (1000 м)*/);
 
         return new CalculateResponse(price);
     }

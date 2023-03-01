@@ -28,7 +28,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         var volumePrice = CalculatePriceByVolume(goods, out var volume);
         var weightPrice = CalculatePriceByWeight(goods, out var weight);
 
-        var resultPrice = Math.Max(volumePrice, weightPrice) * distance;
+        var resultPrice = Math.Max(volumePrice, weightPrice) * distance / 1000M;
 
         _storageRepository.Save(new StorageEntity(
             DateTime.UtcNow,

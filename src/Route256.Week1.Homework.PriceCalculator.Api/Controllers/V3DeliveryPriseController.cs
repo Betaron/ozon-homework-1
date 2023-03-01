@@ -20,8 +20,14 @@ public class V3DeliveryPriseController : ControllerBase
 
     /// <summary>
     /// Метод расчета стоимости доставки на основе объема товаров
-    /// или веса товара. Окончательная стоимость принимается как наибольшая
+    /// или веса товара. Окончательная стоимость принимается как наибольшая.
+    /// Стоимость увеличивается пропорционально расстоянию.
     /// </summary>
+    /// <param name="Height">В метрах</param>
+    /// <param name="Length">В метрах</param>
+    /// <param name="Width">В метрах</param>
+    /// <param name="Weight">В килограммах</param>
+    /// <param name="Distance">В метрах</param>
     /// <returns></returns>
     [HttpPost("calculate")]
     public CalculateResponse Calculate(
@@ -30,10 +36,10 @@ public class V3DeliveryPriseController : ControllerBase
         var price = _priceCalculatorService.CalculatePrice(
             request.Goods
                 .Select(x => new GoodModel(
-                    x.Height,
-                    x.Length,
-                    x.Width,
-                    x.Weight))
+                    x.Height * 1000,
+                    x.Length * 1000,
+                    x.Width * 1000,
+                    x.Weight * 1000))
                 .ToArray(),
             request.Distance);
 
@@ -41,7 +47,8 @@ public class V3DeliveryPriseController : ControllerBase
     }
 
     /// <summary>
-    /// Метод получения истории вычисления
+    /// Метод получения истории вычисления.
+    /// Все значения выводятся в единицах СИ.
     /// </summary>
     /// <returns></returns>
     [HttpPost("get-history")]
@@ -52,10 +59,10 @@ public class V3DeliveryPriseController : ControllerBase
         return log
             .Select(x => new GetHistoryResponse(
                 new CargoResponse(
-                    x.Volume,
-                    x.Weight),
-                x.Price,
-                x.Distance))
+                    x.Volume / 1000000M,    // м^3
+                    x.Weight),              // кг
+                x.Price,                    // у.е.
+                x.Distance))                // м
             .ToArray();
     }
 }

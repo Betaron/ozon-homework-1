@@ -22,6 +22,10 @@ public class V2DeliveryPriseController : ControllerBase
     /// Метод расчета стоимости доставки на основе объема товаров
     /// или веса товара. Окончательная стоимость принимается как наибольшая
     /// </summary>
+    /// <param name="Height">В миллиметрах</param>
+    /// <param name="Length">В миллиметрах</param>
+    /// <param name="Width">В миллиметрах</param>
+    /// <param name="Weight">В граммах</param>
     /// <returns></returns>
     [HttpPost("calculate")]
     public CalculateResponse Calculate(
@@ -35,7 +39,7 @@ public class V2DeliveryPriseController : ControllerBase
                     x.Width,
                     x.Weight))
                 .ToArray()
-                , 1 /* для версий ниже v3 расчет на 1 км*/);
+                , 1000 /* для версий ниже v3 расчет на 1 км (1000 м)*/);
 
         return new CalculateResponse(price);
     }
