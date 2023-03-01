@@ -7,4 +7,6 @@ public interface IPriceCalculatorService
     decimal CalculatePrice(IReadOnlyList<GoodModel> goods, int Distance);
 
     CalculationLogModel[] QueryLog(int take);
+
+    void ClearHistory();
 }

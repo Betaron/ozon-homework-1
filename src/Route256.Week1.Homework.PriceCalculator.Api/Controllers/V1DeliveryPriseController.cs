@@ -59,4 +59,16 @@ public class V1DeliveryPriseController : ControllerBase
                 x.Price))
             .ToArray();
     }
+
+    /// <summary>
+    /// Полностью очищает историю заказов
+    /// </summary>
+    /// <returns></returns>
+    [HttpDelete]
+    public DeleteHistoryResponse Delete()
+    {
+        _priceCalculatorService.ClearHistory();
+
+        return new();
+    }
 }

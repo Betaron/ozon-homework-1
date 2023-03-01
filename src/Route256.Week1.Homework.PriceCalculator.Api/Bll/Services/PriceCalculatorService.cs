@@ -82,4 +82,9 @@ public class PriceCalculatorService : IPriceCalculatorService
                 x.Distance))
             .ToArray();
     }
+
+    public void ClearHistory()
+    {
+        _storageRepository.Clear();
+    }
 }

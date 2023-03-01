@@ -11,7 +11,7 @@ public class StorageRepository : IStorageRepository
     {
         _store = new List<StorageEntity>();
     }
-    
+
     public void Save(StorageEntity entity)
     {
         _store.Add(entity);
@@ -20,5 +20,10 @@ public class StorageRepository : IStorageRepository
     public IReadOnlyList<StorageEntity> Query()
     {
         return _store;
+    }
+
+    public void Clear()
+    {
+        _store.Clear();
     }
 }
