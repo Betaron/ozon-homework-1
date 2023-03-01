@@ -23,12 +23,13 @@ public class V3DeliveryPriseController : ControllerBase
     /// или веса товара. Окончательная стоимость принимается как наибольшая.
     /// Стоимость увеличивается пропорционально расстоянию.
     /// </summary>
-    /// <param name="Height">В метрах</param>
-    /// <param name="Length">В метрах</param>
-    /// <param name="Width">В метрах</param>
-    /// <param name="Weight">В килограммах</param>
-    /// <param name="Distance">В метрах</param>
-    /// <returns></returns>
+    /// <returns>
+    /// "Height": В метрах
+    /// "Length": В метрах
+    /// "Width": В метрах
+    /// "Weight": В килограммах
+    /// "Distance": В метрах
+    /// </returns>
     [HttpPost("calculate")]
     public CalculateResponse Calculate(
         CalculateRequest request)
