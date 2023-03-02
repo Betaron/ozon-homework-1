@@ -35,7 +35,8 @@ public class PriceCalculatorService : IPriceCalculatorService
             volume,
             weight,
             resultPrice,
-            distance));
+            distance,
+            goods.Count));
 
         return resultPrice;
     }

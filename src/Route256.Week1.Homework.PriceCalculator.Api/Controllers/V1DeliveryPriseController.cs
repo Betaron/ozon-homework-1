@@ -11,11 +11,14 @@ namespace Route256.Week1.Homework.PriceCalculator.Api.Controllers;
 public class V1DeliveryPriseController : ControllerBase
 {
     private readonly IPriceCalculatorService _priceCalculatorService;
+    private readonly IAnalyticsService _analyticsService;
 
     public V1DeliveryPriseController(
-        IPriceCalculatorService priceCalculatorService)
+        IPriceCalculatorService priceCalculatorService,
+        IAnalyticsService analyticsService)
     {
         _priceCalculatorService = priceCalculatorService;
+        _analyticsService = analyticsService;
     }
 
     /// <summary>
@@ -70,5 +73,30 @@ public class V1DeliveryPriseController : ControllerBase
         _priceCalculatorService.ClearHistory();
 
         return new();
+    }
+
+    /// <summary>
+    /// Формирует отчет со статистикой для анализа.
+    /// </summary>
+    /// <returns>
+    /// max_weight - наибольший вес товара среди всех расчетов<br/>
+    /// max_volume - наибольший объем товара среди всех расчетов<br/>
+    /// max_distance_for_heaviest_good - расстояние, на которое был перевезен товар с наибольшим весом<br/>
+    /// max_distance_for_largest_good - расстояние, на которое был перевезен товар с наибольшим объемом<br/>
+    /// wavg_price - средневзвешенная стоимость доставки
+    /// </returns>
+    [HttpGet("reports/01")]
+    public StatisticReport1Responce StatisticReport1()
+    {
+        var maxWeightOrder = _analyticsService.FindMaxWeightOrder();
+        var maxVolumeOrder = _analyticsService.FindMaxVolumeOrder();
+        var wavgPrice = _analyticsService.CalculateWavgPrice();
+
+        return new(
+            maxWeightOrder.Weight,
+            maxVolumeOrder.Volume / 1000000,
+            maxWeightOrder.Distance,
+            maxVolumeOrder.Distance,
+            wavgPrice);
     }
 }
