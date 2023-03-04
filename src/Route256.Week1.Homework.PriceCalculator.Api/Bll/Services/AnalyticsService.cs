@@ -26,7 +26,7 @@ public class AnalyticsService : IAnalyticsService
 
 	/// <summary>
 	/// Метод ищет самый большой по объему заказ.
-	/// Отбор производится так же по расстоянию доставки.
+	/// Отбор производится также по расстоянию доставки.
 	/// </summary>
 	public OrderModel FindMaxVolumeOrder()
 	{
@@ -44,7 +44,7 @@ public class AnalyticsService : IAnalyticsService
 
 	/// <summary>
 	/// Метод ищет самый большой по весу заказ.
-	/// Отбор производится так же по расстоянию доставки.
+	/// Отбор производится также по расстоянию доставки.
 	/// </summary>
 	public OrderModel FindMaxWeightOrder()
 	{

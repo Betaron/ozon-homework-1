@@ -1,7 +1,7 @@
 namespace Route256.Week1.Homework.PriceCalculator.Api.Requests.V2;
 
 /// <summary>
-/// Харектеристики товара
+/// Характеристики товара
 /// </summary>
 public record GoodProperties(
     int Height,
