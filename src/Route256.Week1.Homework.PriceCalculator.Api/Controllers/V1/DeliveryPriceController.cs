@@ -28,7 +28,7 @@ public class DeliveryPriceController : ControllerBase
 	/// <param name="Length">В миллиметрах</param>
 	/// <param name="Width">В миллиметрах</param>
 	/// <returns></returns>
-	[HttpPost("calculate")]
+	[HttpPost("//v1/V1DeliveryPrise/calculate")]
 	public CalculateResponse Calculate(
 		CalculateRequest request)
 	{
@@ -49,7 +49,7 @@ public class DeliveryPriceController : ControllerBase
 	/// Метод получения истории вычисления
 	/// </summary>
 	/// <returns></returns>
-	[HttpPost("get-history")]
+	[HttpPost("//v1/V1DeliveryPrise/get-history")]
 	public GetHistoryResponse[] History(GetHistoryRequest request)
 	{
 		var log = _priceCalculatorService.QueryLog(request.Take);
@@ -67,7 +67,7 @@ public class DeliveryPriceController : ControllerBase
 	/// Полностью очищает историю заказов
 	/// </summary>
 	/// <returns></returns>
-	[HttpDelete]
+	[HttpPost("delete-history")]
 	public DeleteHistoryResponse Delete()
 	{
 		_priceCalculatorService.ClearHistory();
@@ -85,7 +85,7 @@ public class DeliveryPriceController : ControllerBase
 	/// max_distance_for_largest_good - расстояние, на которое был перевезен товар с наибольшим объемом<br/>
 	/// wavg_price - средневзвешенная стоимость доставки
 	/// </returns>
-	[HttpGet("reports/01")]
+	[HttpPost("reports/01")]
 	public StatisticReport1Responce StatisticReport1()
 	{
 		var maxWeightOrder = _analyticsService.FindMaxWeightOrder();

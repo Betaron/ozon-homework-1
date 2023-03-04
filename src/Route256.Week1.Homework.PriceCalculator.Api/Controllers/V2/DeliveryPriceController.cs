@@ -27,7 +27,7 @@ public class DeliveryPriceController : ControllerBase
 	/// <param name="Width">В миллиметрах</param>
 	/// <param name="Weight">В граммах</param>
 	/// <returns></returns>
-	[HttpPost("calculate")]
+	[HttpPost("//v2/V2DeliveryPrise/calculate")]
 	public CalculateResponse Calculate(
 		CalculateRequest request)
 	{
