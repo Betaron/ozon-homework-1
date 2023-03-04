@@ -4,7 +4,5 @@ namespace Route256.Week1.Homework.PriceCalculator.Api.Bll.Services.Interfaces;
 
 public interface IAnalyticsService
 {
-	OrderModel FindMaxWeightOrder();
-	OrderModel FindMaxVolumeOrder();
-	decimal CalculateWavgPrice();
+	Report1Model CollectReport1();
 }

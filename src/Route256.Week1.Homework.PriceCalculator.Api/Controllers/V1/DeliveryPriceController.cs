@@ -88,15 +88,13 @@ public class DeliveryPriceController : ControllerBase
 	[HttpPost("reports/01")]
 	public StatisticReport1Responce StatisticReport1()
 	{
-		var maxWeightOrder = _analyticsService.FindMaxWeightOrder();
-		var maxVolumeOrder = _analyticsService.FindMaxVolumeOrder();
-		var wavgPrice = _analyticsService.CalculateWavgPrice();
+		var report = _analyticsService.CollectReport1();
 
 		return new(
-			maxWeightOrder.Weight,
-			maxVolumeOrder.Volume / 1000000,
-			maxWeightOrder.Distance,
-			maxVolumeOrder.Distance,
-			wavgPrice);
+			report.MaxWeight,
+			report.MaxVolume,
+			report.MaxDistanceForHeaviestGood,
+			report.MaxDistanceForLargestGood,
+			report.WavgPrice);
 	}
 }
