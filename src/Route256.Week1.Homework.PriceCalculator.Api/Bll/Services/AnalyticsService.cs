@@ -8,14 +8,27 @@ namespace Route256.Week1.Homework.PriceCalculator.Api.Bll.Services;
 public class AnalyticsService : IAnalyticsService
 {
 	private readonly IStorageRepository _storageRepository;
+	private readonly Dictionary<int, Func<object>> _reports;
 
 	public AnalyticsService(
 		IStorageRepository storageRepository)
 	{
 		_storageRepository = storageRepository;
+
+		_reports = new()
+		{
+			{ 1,  new(GenerateReport1)}
+		};
 	}
 
-	public Report1Model CollectReport1()
+	public object GetAnalyticsReport(int reportId)
+	{
+		if (!_reports.ContainsKey(reportId))
+			throw new ArgumentOutOfRangeException(nameof(reportId));
+		return _reports[reportId].Invoke();
+	}
+
+	public Report1Model GenerateReport1()
 	{
 		var orders = _storageRepository.Query();
 
@@ -26,7 +39,7 @@ public class AnalyticsService : IAnalyticsService
 		var maxVolumeOrder = FindMaxVolumeOrder(orders);
 		var wavgPrice = CalculateWavgPrice(orders);
 
-		return new(
+		return new Report1Model(
 			maxWeightOrder.Weight,
 			maxVolumeOrder.Volume / 1000000,
 			maxWeightOrder.Distance,

@@ -78,23 +78,10 @@ public class DeliveryPriceController : ControllerBase
 	/// <summary>
 	/// Формирует отчет со статистикой для анализа.
 	/// </summary>
-	/// <returns>
-	/// max_weight - наибольший вес товара среди всех расчетов<br/>
-	/// max_volume - наибольший объем товара среди всех расчетов<br/>
-	/// max_distance_for_heaviest_good - расстояние, на которое был перевезен товар с наибольшим весом<br/>
-	/// max_distance_for_largest_good - расстояние, на которое был перевезен товар с наибольшим объемом<br/>
-	/// wavg_price - средневзвешенная стоимость доставки
-	/// </returns>
-	[HttpPost("reports/01")]
-	public StatisticReport1Responce StatisticReport1()
+	[HttpPost("reports/{reportId}")]
+	public IActionResult GenerateStatisticReport(int reportId)
 	{
-		var report = _analyticsService.CollectReport1();
-
-		return new(
-			report.MaxWeight,
-			report.MaxVolume,
-			report.MaxDistanceForHeaviestGood,
-			report.MaxDistanceForLargestGood,
-			report.WavgPrice);
+		var report = _analyticsService.GetAnalyticsReport(reportId);
+		return Ok(report);
 	}
 }
