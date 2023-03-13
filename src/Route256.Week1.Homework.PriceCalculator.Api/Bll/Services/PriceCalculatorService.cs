@@ -9,16 +9,16 @@ public class PriceCalculatorService : IPriceCalculatorService
 {
     private const decimal volumeToPriceRatio = 3.27m;
     private const decimal weightToPriceRatio = 1.34m;
-    
+
     private readonly IStorageRepository _storageRepository;
-    
+
     public PriceCalculatorService(
         IStorageRepository storageRepository)
     {
         _storageRepository = storageRepository;
     }
-    
-    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods)
+
+    public decimal CalculatePrice(IReadOnlyList<GoodModel> goods, int distance)
     {
         if (!goods.Any())
         {
@@ -28,14 +28,16 @@ public class PriceCalculatorService : IPriceCalculatorService
         var volumePrice = CalculatePriceByVolume(goods, out var volume);
         var weightPrice = CalculatePriceByWeight(goods, out var weight);
 
-        var resultPrice = Math.Max(volumePrice, weightPrice);
-        
+        var resultPrice = Math.Max(volumePrice, weightPrice) * distance / 1000M;
+
         _storageRepository.Save(new StorageEntity(
             DateTime.UtcNow,
             volume,
             weight,
-            resultPrice));
-        
+            resultPrice,
+            distance,
+            goods.Count));
+
         return resultPrice;
     }
 
@@ -44,18 +46,18 @@ public class PriceCalculatorService : IPriceCalculatorService
         out decimal volume)
     {
         volume = goods
-            .Select(x => x.Height * x.Width * x.Height / 1000)
+            .Select(x => x.Height * x.Width * x.Length / 1000M)
             .Sum();
 
         return volume * volumeToPriceRatio;
     }
-    
+
     private decimal CalculatePriceByWeight(
         IReadOnlyList<GoodModel> goods,
         out decimal weight)
     {
         weight = goods
-            .Select(x => x.Weight / 1000)
+            .Select(x => x.Weight / 1000M)
             .Sum();
 
         return weight * weightToPriceRatio;
@@ -67,7 +69,7 @@ public class PriceCalculatorService : IPriceCalculatorService
         {
             return Array.Empty<CalculationLogModel>();
         }
-        
+
         var log = _storageRepository.Query()
             .OrderByDescending(x => x.At)
             .Take(take)
@@ -75,9 +77,15 @@ public class PriceCalculatorService : IPriceCalculatorService
 
         return log
             .Select(x => new CalculationLogModel(
-                x.Volume, 
+                x.Volume,
                 x.Weight,
-                x.Price))
+                x.Price,
+                x.Distance))
             .ToArray();
+    }
+
+    public void ClearHistory()
+    {
+        _storageRepository.Clear();
     }
 }
